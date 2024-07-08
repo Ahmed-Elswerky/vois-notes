@@ -1,0 +1,119 @@
+* {
+  padding: unset;
+  margin: unset;
+  border: unset;
+}
+
+body {
+  background: #f5f5f5;
+}
+
+header {
+  padding-block: 10px;
+  background: #f5f5f5;
+  box-shadow: 0px 0px 10px 0px #bcbcbc;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  & > span {
+    font-weight: bold;
+    font-family: fangsong;
+  }
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    span {
+      font-weight: bold;
+      max-width: min(50vw, 150px);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+button {
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0px 0px 2px 0px #bcbcbc;
+}
+
+input,
+textarea {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #bcbcbc;
+  background: #fbfbfb;
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+}
+
+.notes-wrap {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  h3 {
+    text-align: center;
+  }
+
+  .notes-list,
+  .notes-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
+    textarea {
+      height: 120px;
+    }
+  }
+
+  .notes-list {
+    background: #fbfbfb;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px 0px #bcbcbc6c;
+    .note {
+      p {
+        white-space: pre-wrap;
+      }
+    }
+  }
+}
+
+/* container */
+.container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  @media (min-width: 576px) {
+    max-width: 540px;
+  }
+
+  @media (min-width: 768px) {
+    max-width: 720px;
+  }
+
+  @media (min-width: 992px) {
+    max-width: 960px;
+  }
+
+  @media (min-width: 1200px) {
+    max-width: 1140px;
+  }
+}
