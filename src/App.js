@@ -10,21 +10,18 @@ function App() {
   const context = useContext(Context);
   const user = context.state?.user,
     lastActivity = context.state?.lastActivity;
-
   const [loading, setLoading] = useState(true);
   const [signedInFlag, setSignedInFlag] = useState(false);
 
   useEffect(() => {
     try {
       const user = JSON.parse(localStorage.getItem("currentUser"));
+      if (!(user !== null && user?.token?.length > 0)) return;
+      // context.setState({
+      //   user
+      // });
+      getNotes(user);
 
-      if (user !== null && user?.token?.length > 0) {
-        setSignedInFlag(true);
-      } else return;
-
-      context.setState({
-        user: { ...user, token: decryptTxt(user.token) },
-      });
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -33,19 +30,28 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (user !== null && user?.token?.length > 0) {
+      setSignedInFlag(true);
+    } else setSignedInFlag(false);
+  }, [user]);
+
+  useEffect(() => {
     if (signedInFlag) {
-      getNotes();
+      getNotes(user);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastActivity, user]);
+  }, [lastActivity, user, signedInFlag]);
 
-  const getNotes = async () => {
-    const savedNotes = JSON.parse(localStorage.getItem("notes"));
-
-    if (savedNotes) {
+  const getNotes = async (user) => {
+    const savedNotes = JSON.parse(localStorage.getItem("notes") || "[]");
+    if (savedNotes && user.id) {
       context.setState({
+        user,
         notes: savedNotes
-          ?.filter((note) => note.userId === user.id)
+          ?.filter(
+            (note) =>
+              note.userId === user.id || note?.taggedUsers?.includes(user.id)
+          )
           ?.map((note) => ({
             ...note,
             text: decryptTxt(note.text),
@@ -54,21 +60,15 @@ function App() {
       });
     }
   };
-
-  // useEffect(() => {
-  //   try {
-  //     const user = JSON.parse(localStorage.getItem("currentUser") || "{}");
-  //     if (user !== null && user?.token?.length > 0) {
-  //       setSignedInFlag(true);
-  //       setUser(user);
-  //     }
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoading(false);
-  //   }
-  //   return () => {};
-  // }, []);
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem("currentUser");
+      context.setState({ user: { token: null }, notes: [] });
+      // context.updateUserActivity();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="App">
@@ -76,17 +76,11 @@ function App() {
         <div className="container">
           <div className="header-inner">
             <span>Offline Notes</span>
-            {user && (
+            {user?.id && (
               <div className="user-info">
                 <span>{user?.username}</span>
 
-                <button
-                  className="logout"
-                  onClick={() => {
-                    localStorage.removeItem("currentUser");
-                    setSignedInFlag(false);
-                  }}
-                >
+                <button className="logout" onClick={handleLogout}>
                   Log Out
                 </button>
               </div>

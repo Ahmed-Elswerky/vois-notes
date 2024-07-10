@@ -6,13 +6,15 @@
   position: relative;
   transition: transform 0.3s ease;
   height: 220px;
-  width: 150px;
   flex: 25% 0.5;
 
   display: flex;
   flex-direction: column;
   justify-content: stretch;
 
+  @media screen and (max-width: 624px) {
+    flex: 100%;
+  }
   &:hover {
     transform: scale(1.02);
   }
@@ -38,6 +40,25 @@
     overflow: auto;
     // height: 72%;
     flex: 1;
+  }
+  .tagged {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex: 1;
+    span {
+      color: #0000008d;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+    }
+  }
+  .note-author {
+    color: rgb(43, 43, 43);
   }
 }
 .note-actions {

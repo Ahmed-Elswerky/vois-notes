@@ -5,7 +5,8 @@ import EditNote from "./EditNot";
 let searchTimeout = null;
 const NoteList = () => {
   const context = useContext(Context);
-  const notes = context.state?.notes;
+  const notes = context.state?.notes,
+    user = context?.state?.user;
 
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [search, setSearch] = useState("");
@@ -43,6 +44,12 @@ const NoteList = () => {
     }
   };
 
+  const getUserName = (id) => {
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    return users.find((u) => u.id === id)?.username;
+  };
+  const checkCurrentUserNote = (id) => id === user?.id;
+
   return (
     <div className="notes-list">
       {noteToEdit && (
@@ -72,10 +79,28 @@ const NoteList = () => {
               </span>
             </div>
             <p>{note.text}</p>
-            <div className="note-actions">
-              <button onClick={() => editNote(note)}>Edit</button>
-              <button onClick={() => deleteNote(note.id)}>Delete</button>
-            </div>
+            {checkCurrentUserNote(note?.userId) ? (
+              <div className="note-actions">
+                {note?.taggedUsers?.length > 0 && (
+                  <div className="tagged">
+                    <span>
+                      Tagged:{" "}
+                      {note?.taggedUsers
+                        ?.map((id) => getUserName(id))
+                        ?.join(", ")}
+                    </span>
+                  </div>
+                )}
+                <button onClick={() => editNote(note)}>Edit</button>
+                <button onClick={() => deleteNote(note.id)}>Delete</button>
+              </div>
+            ) : (
+              note?.userId !== user?.id && (
+                <span className="note-author">
+                  By @{getUserName(note?.userId)}
+                </span>
+              )
+            )}
           </div>
         ))}
     </div>

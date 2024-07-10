@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { decryptTxt, encryptTxt, randId, token } from "../../utils";
+import { Context } from "../wrapper";
 
 const UserForm = () => {
+  const context = useContext(Context);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isRegistering, setIsRegistering] = useState(true);
@@ -47,6 +49,10 @@ const UserForm = () => {
       "currentUser",
       JSON.stringify({ ...searchedUser, token: decryptTxt(searchedUser.token) })
     );
+
+    context.setState({
+      user: { ...searchedUser, token: decryptTxt(searchedUser.token) },
+    });
   };
 
   const handleSubmit = (e) => {
