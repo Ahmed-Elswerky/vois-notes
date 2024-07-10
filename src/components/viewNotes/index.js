@@ -90,7 +90,7 @@ const Notes = () => {
     <div className="notes-wrap">
       <h3>Note Taking Notes</h3>
       <NoteForm addNote={addNote} />
-      <NoteList notes={notes} />
+      <NoteList />
     </div>
   );
 };

@@ -43,7 +43,6 @@ function App() {
     const savedNotes = JSON.parse(localStorage.getItem("notes"));
 
     if (savedNotes) {
-      console.log("savedNotes", savedNotes);
       context.setState({
         notes: savedNotes
           ?.filter((note) => note.userId === user.id)
