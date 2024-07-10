@@ -1,33 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import CryptoJS from "crypto-js";
 import { decryptTxt, encryptTxt } from "../../utils";
 import NoteForm from "./NotesForm";
 import NoteList from "./NotesList";
+import { Context } from "../wrapper";
 
 const Notes = () => {
-  const [notes, setNotes] = useState([]);
-  const [user, setUser] = useState();
+  const context = useContext(Context);
+  const user = context.state?.user,
+    notes = context.state?.notes;
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    if (!user) return;
-
-    setUser({ ...user, token: decryptTxt(user.token) });
-
-    const savedNotes = JSON.parse(localStorage.getItem("notes"));
-
-    if (savedNotes) {
-      setNotes(
-        savedNotes
-          ?.filter((note) => note.userId === user.id)
-          ?.map((note) => ({ ...note, text: decryptTxt(note.text) }))
-      );
-    }
-  }, []);
+  // const [user, setUser] = useState();
 
   const addNote = (note) => {
     const newNotes = [...notes, { ...note, userId: user.id }];
-    setNotes(newNotes);
+    // setNotes(newNotes);
 
     const otherNotes = JSON.parse(
       localStorage.getItem("notes") || "[]"
@@ -38,11 +25,13 @@ const Notes = () => {
       JSON.stringify([
         ...newNotes?.map((note) => ({
           ...note,
+          title: encryptTxt(note.title),
           text: encryptTxt(note.text),
         })),
         ...otherNotes,
       ])
     );
+    context?.updateUserActivity();
   };
 
   const [noteToEdit, setNoteToEdit] = useState(null);
@@ -92,21 +81,6 @@ const Notes = () => {
   //   setNotes(newNotes);
   //   saveNotes(newNotes);
   // };
-
-  const editNote = (id, newText) => {
-    const updatedNotes = notes.map((note) =>
-      note.id === id ? { ...note, text: newText } : note
-    );
-    setNotes(updatedNotes);
-    saveNotes(updatedNotes);
-    setNoteToEdit(null);
-  };
-
-  const deleteNote = (id) => {
-    const updatedNotes = notes.filter((note) => note.id !== id);
-    setNotes(updatedNotes);
-    saveNotes(updatedNotes);
-  };
 
   const startEditNote = (note) => {
     setNoteToEdit(note);

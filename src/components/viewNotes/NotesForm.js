@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { randId } from "../../utils";
 
 const NoteForm = ({ addNote }) => {
   const [title, setTitle] = useState("");
@@ -7,7 +8,7 @@ const NoteForm = ({ addNote }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (text.trim()) {
-      addNote({ title, text });
+      addNote({ title, text, createdDate: Date.now(), id: randId() });
       setTitle("");
       setText("");
     }

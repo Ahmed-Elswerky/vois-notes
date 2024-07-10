@@ -83,14 +83,13 @@ textarea {
   }
 
   .notes-list {
-    background: #fbfbfb;
+    // background: #fbfbfb;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0px 0px 10px 0px #bcbcbc6c;
-    .note {
-      p {
-        white-space: pre-wrap;
-      }
-    }
+    box-shadow: 0px 0px 5px 0px #bcbcbc6c;
   }
 }
 
